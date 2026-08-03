@@ -230,6 +230,15 @@ Risk Category
 
 6. Slowly Changing Dimension (SCD)
 7. Snowflaked Dimension : A normalized dimension.
+| Type   | History                |
+| ------ | ---------------------- |
+| Type 0 | No changes             |
+| Type 1 | No history             |
+| Type 2 | Full history           |
+| Type 3 | Previous value only    |
+| Type 4 | Separate history table |
+| Type 6 | Hybrid                 |
+
 
 Conparision :
 
@@ -288,9 +297,66 @@ Q: Which key do you use in Fact Tables?
 Surrogate Keys. Fact tables reference dimension tables using surrogate keys because they are stable and support historical tracking.
 
 
+> Bridge Table
+A Bridge Table is used to resolve a many-to-many relationship between a fact table and a dimension table.
+Why do we need a Bridge Table?
+Suppose one employee works on multiple projects.
+One project also has multiple employees.
+Relationship
+Employee ←→ Project
+This is Many-to-Many, which cannot be represented directly in a Star Schema.
 
+Dim_Employee
+      |
+      |
+ Bridge_Table
+      |
+      |
+ Dim_Project
 
+Q: Is Bridge Table a Fact Table?
+No. It stores relationships. Not business measures.
 
+| Bridge Table          | Fact Table               |
+| --------------------- | ------------------------ |
+| Resolves Many-to-Many | Stores business measures |
+| Mostly Foreign Keys   | Measures + Foreign Keys  |
+| No Sales Amount       | Sales Amount, Quantity   |
 
+> Conformed Dimension
+A Conformed Dimension is a dimension table that is shared by multiple fact tables. It has the same meaning, structure, and data across the data warehouse, ensuring consistent reporting.
+Suppose you have three business processes:
+Sales
+Orders
+Returns
+Each process has its own fact table.
+The Customer Dimension is shared by all three fact tables -> So it is a Conformed Dimension.
+          Dim_Customer
+               |
+---------------------------------
+|              |                |
+Fact_Sales  Fact_Orders   Fact_Returns
 
+> Why do we need Conformed Dimensions?
+Consistent reporting
+Reusable dimensions
+Easier maintenance
+Supports enterprise-wide analytics
+
+> Role Playing Dimension 
+Same dimension used multiple times within the same fact table.
+ex:
+Fact_Order
+Order_Date
+Ship_Date
+Delivery_Date
+
+All reference: Dim_Date
+
+> Difference :
+
+| Conformed Dimension                | Role-Playing Dimension                               |
+| ---------------------------------- | ---------------------------------------------------- |
+| Shared across multiple fact tables | Same dimension used multiple times in one fact table |
+| Example: Customer                  | Example: Date                                        |
 
