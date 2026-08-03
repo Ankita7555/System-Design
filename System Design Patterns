@@ -1,0 +1,41 @@
+Data Engineering System Design Patterns (Interview Order)
+Batch ETL / ELT Pipeline Design
+Real-Time Streaming Pipeline Design
+Data Warehouse Design
+Data Lake / Lakehouse Design
+CDC (Change Data Capture) Pipeline Design
+Airflow Workflow / DAG Design
+Kafka Event-Driven Architecture
+Snowflake Data Platform Design
+BigQuery Data Platform Design
+Spark Batch Processing Design
+Spark Structured Streaming Design
+Data Ingestion Framework Design
+Data Transformation Framework Design
+Data Quality & Validation Framework
+Metadata & Data Catalog Design
+Data Governance & Lineage Design
+Pipeline Monitoring & Alerting Design
+Logging & Audit Framework Design
+Error Handling & Retry Framework
+Dead Letter Queue (DLQ) Design
+Performance Optimization Design
+Scalable Data Partitioning Strategy
+File Processing System Design
+API Data Ingestion Design
+Multi-Cloud Data Platform Design
+Data Migration / Modernization Design
+Security & IAM Architecture
+Backup & Disaster Recovery Design
+Cost Optimization Architecture
+CI/CD Pipeline for Data Engineering
+Feature Store / ML Data Pipeline Design
+Healthcare Data Pipeline Design
+Banking / Financial Data Pipeline Design
+Retail / E-commerce Data Pipeline Design
+IoT Data Pipeline Design
+Clickstream Analytics Pipeline
+Fraud Detection Pipeline
+Log Analytics Pipeline
+Customer 360 Data Platform
+End-to-End Enterprise Data Platform Design
