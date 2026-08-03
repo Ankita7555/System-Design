@@ -1,1 +1,296 @@
+> Data modeling:
+Data modeling is the process of organizing and structuring data into tables, relationships, and constraints so it can be stored, managed, and queried efficiently. It helps reduce data redundancy, improve data quality, and optimize query performance. In data warehousing, data modeling is commonly implemented using Star Schema or Snowflake Schema, where fact tables store business metrics and dimension tables store descriptive attributes.
+
+Key Points
+Organize data into tables and relationships
+Improve data quality
+Reduce redundancy
+Improve query performance
+Supports analytics and reporting
+
+>Types of Data Models : 3 types
+
+Conceptual Model
+High-level business view
+Defines entities and relationships
+Example: Customer, Product, Order
+
+Logical Model
+Defines attributes, primary keys, and foreign keys
+Independent of any specific database
+Ex:Customer(Customer_ID, Name)
+Order(Order_ID, Customer_ID, Order_Date)
+
+Physical Model
+Database implementation
+Includes data types, indexes, partitions, constraints, storage details
+Ex:Customer(
+   Customer_Key INT,
+   Name VARCHAR(100),
+   Email VARCHAR(100) )
+
+> Why is data modeling important?
+Improves query performance
+Reduces redundancy
+Maintains data integrity
+Makes reporting and analytics easier
+Supports scalable ETL pipelines
+
+
+> OLAP v/s OLTP
+
+| OLTP                 | OLAP                   |
+| -------------------- | ---------------------- |
+| Transactional        | Analytical             |
+| Insert/Update/Delete | Read-heavy             |
+| Current data         | Historical data        |
+| Normalized           | Denormalized           |
+| Fast transactions    | Fast complex queries   |
+| Thousands of users   | Fewer analytical users |
+
+Q: Why don't we run reports on OLTP?
+
+It impacts transaction performance. Complex analytical queries can slow down inserts and updates. Therefore, data is moved to a Data Warehouse (OLAP) for reporting.
+
+Q: Which databases are OLTP?
+Examples:
+MySQL
+PostgreSQL
+Oracle
+SQL Server
+
+Q: Which databases are OLAP?
+Examples:
+Snowflake
+Amazon Redshift
+Google BigQuery
+Azure Synapse
+
+> Fact v/s Dimension table
+| Fact Table              | Dimension Table                 |
+| ----------------------- | ------------------------------- |
+| Stores business metrics | Stores descriptive attributes   |
+| Large number of records | Smaller number of records       |
+| Contains foreign keys   | Contains primary key            |
+| Numeric values          | Text/descriptive values         |
+| Used for calculations   | Used for filtering and grouping |
+
+Q: Can a Fact Table exist without Dimension Tables?
+Technically yes, but it loses business context. Dimension tables provide meaningful information like customer names, product names, and dates, making reports understandable.
+
+> star schema :
+A Star Schema consists of one central Fact Table connected directly to multiple denormalized Dimension Tables.
+              Dim_Date
+                 |
+Dim_Customer -- Fact_Sales -- Dim_Product
+                 |
+             Dim_Store
+Advantages :
+Faster query performance
+Fewer joins
+Simple to understand
+Ideal for BI tools
+Disadvantages :
+More data redundancy
+Uses more storage
+
+> Snowflake Schema
+A Snowflake Schema is an extension of the Star Schema where dimension tables are normalized into multiple related tables.
+
+               Dim_Date
+                  |
+Dim_Customer -- Fact_Sales -- Dim_Product
+                                 |
+                            Dim_Category
+                                 |
+                             Dim_Brand
+Advantages :
+Less redundancy
+Better data integrity
+Saves storage
+Easier to maintain master data
+Disadvantages :
+More joins
+Slightly slower queries
+More complex design
+
+> Star vs Snowflake
+| Star Schema             | Snowflake Schema      |
+| ----------------------- | --------------------- |
+| Denormalized dimensions | Normalized dimensions |
+| Fewer joins             | More joins            |
+| Faster queries          | Slightly slower       |
+| More storage            | Less storage          |
+| Simpler design          | More complex          |
+
+Q: Which one is better?
+It depends on the business requirement.
+Star Schema
+Better for reporting and dashboards.
+Preferred in most data warehouses.
+Snowflake Schema
+Better when reducing redundancy and maintaining dimension data is important.
+
+
+> Fact Constellation (Galaxy Schema)
+A Fact Constellation Schema contains multiple fact tables that share common dimension tables.
+                    Dim_Date
+                       |
+        -------------------------------
+        |              |              |
+    Fact_Sales    Fact_Orders   Fact_Returns
+        |              |              |
+   Dim_Customer   Dim_Product    Dim_Store
+         \             |            /
+          --------------
+
+
+> Types of Fact Table :
+
+1. Transaction Fact Table (Most Common)
+Definition : Stores every business transaction.
+Ex:
+| Order_ID | Customer | Product | Sales |
+| -------- | -------- | ------- | ----: |
+| 1001     | John     | Laptop  |  1000 |
+| 1002     | Alice    | Phone   |   800 |
+
+2. Snapshot Fact Table
+Stores the state of a business process at regular intervals (daily, weekly, monthly).
+Ex:
+| Date   | Product | Inventory |
+| ------ | ------- | --------: |
+| 01-Jan | Laptop  |       500 |
+| 02-Jan | Laptop  |       450 |
+
+3. Accumulating Snapshot Fact Table
+Tracks a process with multiple milestones. The same row is updated as the process progresses.
+Ex:
+| Order_ID | Order Date | Ship Date | Delivery Date |
+| -------- | ---------- | --------- | ------------- |
+| 1001     | 1-Jan      | 3-Jan     | 5-Jan         |
+
+4. Factless Fact Table
+Contains no numeric measures. It records that an event happened.
+Ex:
+| Student_ID | Course_ID | Date   |
+| ---------- | --------- | ------ |
+| 101        | CS101     | 01-Jan |
+
+Difference :
+
+| Fact Type             | Stores                  | Example         |
+| --------------------- | ----------------------- | --------------- |
+| Transaction           | Every transaction       | Sales           |
+| Snapshot              | Periodic state          | Daily Inventory |
+| Accumulating Snapshot | Process milestones      | Order Tracking  |
+| Factless              | Events without measures | Attendance      |
+
+
+> Types of Dimension Tables
+
+1. Conformed Dimension
+Shared across multiple fact tables.
+Ex:
+Fact_Sales
+      |
+Dim_Customer
+      |
+Fact_Returns
+
+
+2. Role-Playing Dimension
+Same dimension used multiple times.
+Ex:
+Fact_Order
+
+Order_Date
+
+Ship_Date
+
+Delivery_Date
+
+
+3. Junk Dimension
+Stores low-cardinality flags.
+Ex:
+| Active | Coupon | Online_Order |
+| ------ | ------ | ------------ |
+| Y      | N      | Y            |
+
+4. Degenerate Dimension
+No separate dimension table. Stored directly in the fact table.
+
+5. Mini Dimension
+Stores frequently changing attributes.
+Examples:
+Customer Status
+Loyalty Level
+Risk Category
+
+6. Slowly Changing Dimension (SCD)
+7. Snowflaked Dimension : A normalized dimension.
+
+Conparision :
+
+| Dimension Type | Purpose                         |
+| -------------- | ------------------------------- |
+| Conformed      | Shared across facts             |
+| Role Playing   | Same dimension, different roles |
+| Junk           | Flags and indicators            |
+| Degenerate     | Stored in fact table            |
+| Mini           | Frequently changing attributes  |
+| SCD            | Maintain history                |
+| Snowflaked     | Normalized dimension            |
+
+
+
+
+
+
+
+
+
+
+
+> Grain : Grain defines the level of detail represented by each row in a fact table. Before designing a fact table, we must clearly define what one row represents.
+Ex : Sales Fact table 
+
+| Order_ID | Product | Customer | Sales |
+| -------- | ------- | -------- | ----: |
+| 1001     | Laptop  | John     |  1000 |
+
+Grain : One row = One product in one order
+
+> Why is Grain Important?
+Defines the level of detail.
+Prevents duplicate counting.
+Helps identify the correct dimensions.
+Determines the measures stored in the fact table.
+
+Q: When do you define the grain?
+Answer:
+Grain should be defined before designing the fact table. It determines the fact table structure, measures, and required dimensions.
+
+Q: Can a fact table have multiple grains?
+No. A fact table should have one consistent grain. Mixing daily and monthly data in the same fact table can lead to incorrect aggregations and reporting.
+
+> keys :
+| Natural Key              | Surrogate Key            |
+| ------------------------ | ------------------------ |
+| Business-generated       | System-generated         |
+| Has business meaning     | No business meaning      |
+| May change               | Never changes            |
+| Comes from source system | Created in the warehouse |
+| Example: Employee_ID     | Example: Employee_Key    |
+
+Q: Which key do you use in Fact Tables?
+Surrogate Keys. Fact tables reference dimension tables using surrogate keys because they are stable and support historical tracking.
+
+
+
+
+
+
+
 
