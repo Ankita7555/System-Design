@@ -1,5 +1,27 @@
-Data Engineering System Design Patterns (Interview Order)
-Batch ETL / ELT Pipeline Design
+> Data Engineering System Design Patterns (Interview Order)
+ 1 . Batch ETL / ELT Pipeline Design
+
+Interview Question:
+Design a batch ETL pipeline to load data from SQL Server into Snowflake every night.
+
+Step 1: Clarify Requirements (Always start here)
+Before drawing the architecture, ask:
+
+What is the data source? (SQL Server)
+Batch or real-time? (Batch)
+Frequency? (Daily at 2 AM)
+Data volume? (Example: 100 GB/day)
+Full load or incremental? (Incremental)
+SLA? (Pipeline should finish by 6 AM)
+Reporting destination? (Snowflake)
+
+
+
+
+
+
+
+
 Real-Time Streaming Pipeline Design
 Data Warehouse Design
 Data Lake / Lakehouse Design
